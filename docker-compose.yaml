@@ -5,7 +5,7 @@ services:
     ports:
       - 80:80
     environment:
-      - LOG_LEVEL=debug
+      - LOG_LEVEL=warn
       - USP_LICENSE_KEY=$USP_LICENSE_KEY
       - PUB_POINT_NAME=channel1
       - PUB_POINT_OPTS=--archiving=1 --archive_length=3600 --archive_segment_length=600 --dvr_window_length=1800 --restart_on_encoder_reconnect --hls.minimum_fragment_length=48/25 --hls.client_manifest_version=4 --hls.no_audio_only --mpd.minimum_fragment_length=48/25 --mpd.segment_template=time
