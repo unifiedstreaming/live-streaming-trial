@@ -24,7 +24,7 @@ Docker, if not already installed see: https://docs.docker.com/get-docker/
 Internet access on host through ports 53 and 80; needed to check license key
 
 ## Step 1
-Start by cloning the Virtual Channel repository from GitHub and starting the Docker Compose stack:
+Start by cloning the Live streaming trial from GitHub and starting the Docker Compose stack:
 
 ```
 git clone https://github.com/unifiedstreaming/live-streaming-trial.git
