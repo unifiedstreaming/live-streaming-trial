@@ -18,7 +18,7 @@ services:
     image: docker.io/unifiedstreaming/live-streaming-ffmpeg:stable
     environment:
       - PUB_POINT_URI=http://live-streaming-origin/channel1/channel1.isml
-      - 'TRACKS={ "video": [ { "width": 640, "height": 360, "bitrate": "100k", "codec": "libx264", "framerate": 25, "gop": 48, "timescale": 25 } ], "audio": [ { "samplerate": 48000, "bitrate": "64k", "codec": "aac", "language": "eng", "timescale": 48000, "frag_duration_micros": 1920000 } ] }'
+      - 'TRACKS={ "video": [ { "width": 1280, "height": 720, "bitrate": "300k", "codec": "libx264", "framerate": 25, "gop": 48, "timescale": 25 } ], "audio": [ { "samplerate": 48000, "bitrate": "64k", "codec": "aac", "language": "eng", "timescale": 48000, "frag_duration_micros": 1920000 } ] }'
     depends_on:
       live-streaming-origin:
         condition: service_healthy
