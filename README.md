@@ -1,192 +1,116 @@
 ![Image](unifiedstreaming-logo-black.jpg?raw=true)
 # Live Streaming Trial
 ## Overview
-This project demonstrates the use of [FFmpeg](https://ffmpeg.org/) and [Unified Streaming - Origin Live](http://www.unified-streaming.com/products/unified-origin) to present a Live Adaptive Bitrate presentation.
+Launch a live channel and stream just-in-time to any internet connected device from a unified origin.
 
-FFmpeg delivers CMAF tracks to Unified Origin using the [DASH-IF Live Media Ingest Protocol - Interface 1](https://dashif-documents.azurewebsites.net/Ingest/master/DASH-IF-Ingest.html)
+This trial demonstrates the use of [FFmpeg](https://ffmpeg.org/) and [Unified Streaming - Origin Live](http://www.unified-streaming.com/products/unified-origin) to present a Live Adaptive Bitrate presentation.
 
-For more information about Unified Origin or you have any questions please visit see our [Documentation](http://docs.unified-streaming.com/) or contact us at [support@unified-streaming.com](mailto:support@unified-streaming.com?subject=[GitHub]%20Live%20Streaming%20Trial).
+FFmpeg delivers CMAF tracks to Unified Origin using the [DASH-IF Live Media
+Ingest Protocol - Interface
+1](https://dashif-documents.azurewebsites.net/Ingest/master/DASH-IF-Ingest.html)
+
 ![Image](./live-streaming-trial-image.png?raw=true)
 
+### What to expect from this trial
 
-The default track configuration created is below, however encoding parameters can be updated within the [docker-compose.yaml](docker-compose.yaml).
-- Video Track 1 - 1280x720 300k AVC 48GOP@25FPS
-- Video Track 2 - 480x360 100k AVC 48GOP@25FPS
-- Audio Track 1 - 64kbs 48kHz AAC-LC - English language
-- Audio Track 2 - 64kbs 48kHz AAC-LC - Dutch language
+Follow the steps below to launch a live channel in less than 30 minutes.
 
-## Setup
+Your 7 day trial key is present in Step 1.
 
-1. Install [Docker](http://docker.io)
-2. Install [Docker Compose](http://docs.docker.com/compose/install/)
-3. Download this demo's [Compose file](https://github.com/unifiedstreaming/live-streaming-trial/blob/stable/docker-compose.yaml)
 
-## Usage
+## Prerequisites
+Docker, if not already installed see: https://docs.docker.com/get-docker/
 
-You need a license key to use this software. To evaluate you can create an account at [Unified Streaming Registration](https://www.unified-streaming.com/licenses/access).
+Internet access on host through ports 53 and 80; needed to check license key
 
-The license key is passed to containers using the *USP_LICENSE_KEY* environment variable.
+## Step 1
+Start by cloning the Virtual Channel repository from GitHub and starting the Docker Compose stack:
 
-Start the stack using *docker-compose*:
+```
+git clone https://github.com/unifiedstreaming/live-streaming-trial.git
 
-```bash
-#!/bin/sh
-export USP_LICENSE_KEY=<your_license_key>
-docker-compose up
+cd live-streaming-trial
+
+export UspLicenseKey=<your_license_key>
+
+docker compose up -d
+```
+## Step 2
+Wait a minute or two for all the Docker images to download and the services to start, you can view the status by checking the logs with:
+
+```
+docker compose logs
 ```
 
-Now the project is running a live stream should be available in all streaming formats at the following URLs:
+And checking the origin is available by querying it with curl:
 
-| Streaming Format | Playout URL |
-|------------------|-------------|
-| HLS | http://localhost/channel1/test.isml/.m3u8 |
-| MPEG-DASH | http://localhost/channel1/channel1.isml/.mpd |
-
-
-## Example HLS Main Manifest
 ```
-% curl -s http://localhost/channel1/channel1.isml/.m3u8
-#EXTM3U
-#EXT-X-VERSION:4
-## Created with Unified Streaming Platform  (version=1.12.1-28247)
-
-# AUDIO groups
-#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio-aacl-64",LANGUAGE="nl",NAME="Dutch; Flemish",DEFAULT=YES,AUTOSELECT=YES,CHANNELS="1"
-#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio-aacl-64",LANGUAGE="en",NAME="English",AUTOSELECT=YES,CHANNELS="1",URI="channel1-audio_eng=64000.m3u8"
-
-# variants
-#EXT-X-STREAM-INF:BANDWIDTH=192000,AVERAGE-BANDWIDTH=174000,CODECS="mp4a.40.2,avc1.42C015",RESOLUTION=640x360,FRAME-RATE=25,AUDIO="audio-aacl-64",CLOSED-CAPTIONS=NONE
-channel1-audio_dut=64000-video=100000.m3u8
-#EXT-X-STREAM-INF:BANDWIDTH=425000,AVERAGE-BANDWIDTH=386000,CODECS="mp4a.40.2,avc1.42C01F",RESOLUTION=1280x720,FRAME-RATE=25,AUDIO="audio-aacl-64",CLOSED-CAPTIONS=NONE
-channel1-audio_dut=64000-video=300000.m3u8
-
-# keyframes
-#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=15000,CODECS="avc1.42C015",RESOLUTION=640x360,URI="keyframes/channel1-video=100000.m3u8"
-#EXT-X-I-FRAME-STREAM-INF:BANDWIDTH=44000,CODECS="avc1.42C01F",RESOLUTION=1280x720,URI="keyframes/channel1-video=300000.m3u8
+curl http://localhost/channel1/channel1.isml/state
 ```
 
-## Example MPEG-DASH Manifest
+Which should respond:
+
 ```xml
-% curl -s http://localhost/channel1/channel1.isml/.mpd
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Created with Unified Streaming Platform  (version=1.12.1-28247) -->
-<MPD
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="urn:mpeg:dash:schema:mpd:2011"
-  xsi:schemaLocation="urn:mpeg:dash:schema:mpd:2011 http://standards.iso.org/ittf/PubliclyAvailableStandards/MPEG-DASH_schema_files/DASH-MPD.xsd"
-  type="dynamic"
-  availabilityStartTime="1970-01-01T00:00:00Z"
-  publishTime="2023-01-20T13:56:56.216119Z"
-  minimumUpdatePeriod="PT2S"
-  timeShiftBufferDepth="PT30M"
-  maxSegmentDuration="PT2S"
-  minBufferTime="PT10S"
-  profiles="urn:mpeg:dash:profile:isoff-live:2011,urn:com:dashif:dash264">
-  <Period
-    id="1"
-    start="PT0S">
-    <BaseURL>dash/</BaseURL>
-    <AdaptationSet
-      id="1"
-      group="1"
-      contentType="audio"
-      lang="nl"
-      segmentAlignment="true"
-      audioSamplingRate="48000"
-      mimeType="audio/mp4"
-      codecs="mp4a.40.2"
-      startWithSAP="1">
-      <AudioChannelConfiguration
-        schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
-        value="1" />
-      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
-      <SegmentTemplate
-        timescale="48000"
-        initialization="channel1-$RepresentationID$.dash"
-        media="channel1-$RepresentationID$-$Time$.dash">
-        <!-- 2023-01-20T13:56:28.800000Z / 1674222988 - 2023-01-20T13:56:38.400000Z -->
-        <SegmentTimeline>
-          <S t="80362703462400" d="92160" r="4" />
-        </SegmentTimeline>
-      </SegmentTemplate>
-      <Representation
-        id="audio_dut=64000"
-        bandwidth="64000">
-      </Representation>
-    </AdaptationSet>
-    <AdaptationSet
-      id="2"
-      group="1"
-      contentType="audio"
-      lang="en"
-      segmentAlignment="true"
-      audioSamplingRate="48000"
-      mimeType="audio/mp4"
-      codecs="mp4a.40.2"
-      startWithSAP="1">
-      <AudioChannelConfiguration
-        schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011"
-        value="1" />
-      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
-      <SegmentTemplate
-        timescale="48000"
-        initialization="channel1-$RepresentationID$.dash"
-        media="channel1-$RepresentationID$-$Time$.dash">
-        <!-- 2023-01-20T13:56:28.800000Z / 1674222988 - 2023-01-20T13:56:38.400000Z -->
-        <SegmentTimeline>
-          <S t="80362703462400" d="92160" r="4" />
-        </SegmentTimeline>
-      </SegmentTemplate>
-      <Representation
-        id="audio_eng=64000"
-        bandwidth="64000">
-      </Representation>
-    </AdaptationSet>
-    <AdaptationSet
-      id="3"
-      group="2"
-      contentType="video"
-      par="16:9"
-      minBandwidth="100000"
-      maxBandwidth="300000"
-      maxWidth="1280"
-      maxHeight="720"
-      segmentAlignment="true"
-      frameRate="25"
-      mimeType="video/mp4"
-      startWithSAP="1">
-      <Role schemeIdUri="urn:mpeg:dash:role:2011" value="main" />
-      <SegmentTemplate
-        timescale="600"
-        initialization="channel1-$RepresentationID$.dash"
-        media="channel1-$RepresentationID$-$Time$.dash">
-        <!-- 2023-01-20T13:56:28.800000Z / 1674222988 - 2023-01-20T13:56:38.400000Z -->
-        <SegmentTimeline>
-          <S t="1004533793280" d="1152" r="4" />
-        </SegmentTimeline>
-      </SegmentTemplate>
-      <Representation
-        id="video=100000"
-        bandwidth="100000"
-        width="480"
-        height="360"
-        sar="4:3"
-        codecs="avc1.42C015"
-        scanType="progressive">
-      </Representation>
-      <Representation
-        id="video=300000"
-        bandwidth="300000"
-        width="1280"
-        height="720"
-        sar="1:1"
-        codecs="avc1.42C01F"
-        scanType="progressive">
-      </Representation>
-    </AdaptationSet>
-  </Period>
-  <UTCTiming
-    schemeIdUri="urn:mpeg:dash:utc:http-iso:2014"
-    value="https://time.akamai.com/?iso" />
-</MPD>
+<smil
+  xmlns="http://www.w3.org/2001/SMIL20/Language">
+  <head>
+    <meta
+      name="updated"
+      content="2023-01-20T15:38:30.557813Z">
+    </meta>
+    <meta
+      name="state"
+      content="started">
+    </meta>
+  </head>
+</smil>
 ```
+## Step 3
+Play the live stream from host running container:
+
+* Open DASH stream (http://localhost/channel1/channel1.isml/.mpd) in latest shaka player
+* Open HLS TS stream (http://localhost/channel1/channel1.isml/.m3u8) in latest hls.js
+* Open HLS CMAF stream (http://localhost/channel1/channel1.isml/.m3u8?hls_fmp4) in latest hls.js
+
+> **_NOTE:_**
+The FFmpeg container is configured to encode multiple video and audio tracks in
+realtime. Therefore buffering or stalled experienced when playing the stream
+from Unified Origin is subject to the performance of the FFmpeg container. If issues persists, please follow step 4.
+
+## Step 4
+Stop the services by running:
+
+```
+docker compose down
+```
+Restart the trial with a simplified example configured to ingest only 1 video and 1 audio track.
+
+```
+docker compose -f docker-compose-simple.yaml up -d 
+```
+Then following Step 3 to playback the new stream.
+
+### Tips
+To check when your license key expires: 
+```
+docker exec -it live-streaming-trial_live-streaming-origin_1 mp4split
+--show_license
+```
+
+To print and tail origin container's logs: 
+```
+docker logs -f live-streaming-trial_live-streaming-origin_1
+```
+To get into origin container's shell: 
+```
+docker exec -it -w /var/www/unified-origin live-streaming-trial_live-streaming-origin_1 /bin/sh
+```
+
+## What's next?
+[Learn more about the key features and benefits of using Unified Origin for live streaming](https://docs.unified-streaming.com/documentation/live/index.html)
+
+or
+
+[Contact us](mailto:%20sales@unified-streaming.com) to purchase a license
