@@ -70,9 +70,9 @@ Which should respond:
 ## Step 3
 Play the live stream from host running container:
 
-* Open DASH stream (http://localhost/channel1/channel1.isml/.mpd) in latest shaka player
-* Open HLS TS stream (http://localhost/channel1/channel1.isml/.m3u8) in latest hls.js
-* Open HLS CMAF stream (http://localhost/channel1/channel1.isml/.m3u8?hls_fmp4) in latest hls.js
+* Open [DASH stream (http://localhost/channel1/channel1.isml/.mpd)](https://shaka-player-demo.appspot.com/demo/#audiolang=en-GB;textlang=en-GB;uilang=en-GB;asset=http://localhost/channel1/channel1.isml/.mpd;panel=CUSTOM%20CONTENT;build=uncompiled) in latest shaka player
+* Open [HLS TS stream (http://localhost/channel1/channel1.isml/.m3u8)](https://hls-js.netlify.app/demo/?src=http://localhost/channel1/channel1.isml/.m3u8) in latest hls.js
+* Open [HLS CMAF stream (http://localhost/channel1/channel1.isml/.m3u8?hls_fmp4)](https://hls-js.netlify.app/demo/?src=http://localhost/channel1/channel1.isml/.m3u8?hls_fmp4) in latest hls.js
 
 > **_NOTE:_**
 The FFmpeg container is configured to encode multiple video and audio tracks in
