@@ -1,5 +1,17 @@
 ![Image](unifiedstreaming-logo-black.jpg?raw=true)
 # Live Streaming Trial
+
+> [!WARNING]
+> This repository and associated container images are **for demo purposes
+> only**.
+>
+> Please refer to our [Installation
+> documentation](https://docs.unified-streaming.com/installation/distributions.html)
+> on how to install Unified Origin on your desired operating system and
+> architecture where addition configuration options maybe required.
+
+
+
 ## Overview
 Launch a live channel and stream just-in-time to any internet connected device from a unified origin.
 
@@ -88,22 +100,22 @@ docker compose down
 Restart the trial with a simplified example configured to ingest only 1 video and 1 audio track.
 
 ```
-docker compose -f docker-compose-simple.yaml up -d 
+docker compose -f docker-compose-simple.yaml up -d
 ```
 Then following Step 3 to playback the new stream.
 
 ### Tips
-To check when your license key expires: 
+To check when your license key expires:
 ```
 docker exec -it live-streaming-trial_live-streaming-origin_1 mp4split
 --show_license
 ```
 
-To print and tail origin container's logs: 
+To print and tail origin container's logs:
 ```
 docker logs -f live-streaming-trial_live-streaming-origin_1
 ```
-To get into origin container's shell: 
+To get into origin container's shell:
 ```
 docker exec -it -w /var/www/unified-origin live-streaming-trial_live-streaming-origin_1 /bin/sh
 ```
